@@ -35,8 +35,8 @@ export default function GeneralView() {
     { id: 'reasons', label: 'Reason Master', key: 'wms_reasons', stateName: 'reasons', setter: context.setReasons }
   ];
 
-  const currentTabInfo = tabs.find(t => t.id === activeTab);
-  const currentData = context[currentTabInfo.stateName] || [];
+  const currentTabInfo = tabs.find(t => t.id === activeTab) || tabs[0];
+  const currentData = currentTabInfo ? (context[currentTabInfo.stateName] || []) : [];
 
   // Filtered data
   const filteredData = currentData.filter(item => {

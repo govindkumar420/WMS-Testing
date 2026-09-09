@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { WmsDataContext } from '../../context/WmsDataContext';
-import { ShieldCheck, Truck, KeyRound, Smartphone } from 'lucide-react';
+import { ShieldCheck, Truck, KeyRound, Smartphone, Sparkles, ArrowRight } from 'lucide-react';
 
 export default function LoginView() {
-  const { loginUser, settings } = useContext(WmsDataContext);
+  const { loginUser, loginDirectly, settings } = useContext(WmsDataContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -20,16 +20,14 @@ export default function LoginView() {
 
     const res = loginUser(username, password);
     if (res.success) {
-      if (settings.otpVerify) {
+      if (settings?.otpVerify) {
         // Trigger OTP
         const code = Math.floor(1000 + Math.random() * 9000).toString();
         setGeneratedOtp(code);
         setPendingUser(res.user);
         setOtpStage(true);
-      } else {
-        // Direct Login (session already set in loginUser context)
-        window.location.reload();
       }
+      // Direct session set already updates loggedInUser in context
     } else {
       setError(res.message);
     }
@@ -39,9 +37,17 @@ export default function LoginView() {
     e.preventDefault();
     if (otpVal === generatedOtp || otpVal === '1234') { // Allow 1234 bypass for quick testing
       // Confirm login (session is already saved in context from loginUser step)
-      window.location.reload();
+      setOtpStage(false);
     } else {
       setError('Invalid OTP code. Please try again.');
+    }
+  };
+
+  const handleDirectDemo = (user = 'admin') => {
+    if (loginDirectly) {
+      loginDirectly(user);
+    } else {
+      loginUser('admin', 'Admin@123');
     }
   };
 
@@ -133,37 +139,52 @@ export default function LoginView() {
                   <a href="#" className="text-emerald-600 dark:text-emerald-400 hover:underline">Forgot password?</a>
                 </div>
 
-                <button
-                  type="submit"
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg py-2 text-sm transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
-                >
-                  Sign In
-                </button>
+                <div className="space-y-2 pt-2">
+                  <button
+                    type="submit"
+                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg py-2 text-sm transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDirectDemo('admin')}
+                    className="w-full flex items-center justify-center gap-2 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 font-semibold rounded-lg py-2 text-xs transition-colors shadow-sm"
+                  >
+                    <Sparkles className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                    <span>⚡ Quick Launch as Admin (Instant Demo)</span>
+                    <ArrowRight className="h-3 w-3" />
+                  </button>
+                </div>
               </form>
 
               {/* Demo Accounts Panel */}
-              <div className="mt-6 border-t border-zinc-200 dark:border-zinc-800 pt-6">
-                <span className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 mb-3 uppercase tracking-wider">Demo User Roles (Quick Fill)</span>
+              <div className="mt-6 border-t border-zinc-200 dark:border-zinc-800 pt-5">
+                <span className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 mb-2.5 uppercase tracking-wider">Demo User Roles (Click to Fill & Test)</span>
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <button
+                    type="button"
                     onClick={() => autofillUser('admin', 'Admin@123')}
                     className="p-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-left text-zinc-700 dark:text-zinc-300 font-medium transition-colors"
                   >
                     Admin <span className="block text-[10px] font-normal text-zinc-400">username: admin</span>
                   </button>
                   <button
+                    type="button"
                     onClick={() => autofillUser('manager', 'Manager@123')}
                     className="p-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-left text-zinc-700 dark:text-zinc-300 font-medium transition-colors"
                   >
                     Manager <span className="block text-[10px] font-normal text-zinc-400">username: manager</span>
                   </button>
                   <button
+                    type="button"
                     onClick={() => autofillUser('operator', 'Operator@123')}
                     className="p-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-left text-zinc-700 dark:text-zinc-300 font-medium transition-colors"
                   >
                     GRN Operator <span className="block text-[10px] font-normal text-zinc-400">username: operator</span>
                   </button>
                   <button
+                    type="button"
                     onClick={() => autofillUser('qc_inspector', 'Qc@123')}
                     className="p-2 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-left text-zinc-700 dark:text-zinc-300 font-medium transition-colors"
                   >

@@ -78,13 +78,46 @@ export const WmsDataProvider = ({ children }) => {
   const [taxes, setTaxes] = useState([]);
   const [reasons, setReasons] = useState([]);
 
+  // Safe Storage Helper
+  const safeStorage = {
+    get: (key) => {
+      try {
+        return localStorage.getItem(key);
+      } catch (e) {
+        console.warn(`Storage get error for ${key}:`, e);
+        return null;
+      }
+    },
+    set: (key, val) => {
+      try {
+        localStorage.setItem(key, typeof val === 'string' ? val : JSON.stringify(val));
+      } catch (e) {
+        console.warn(`Storage set error for ${key}:`, e);
+      }
+    },
+    remove: (key) => {
+      try {
+        localStorage.removeItem(key);
+      } catch (e) {
+        console.warn(`Storage remove error for ${key}:`, e);
+      }
+    },
+    clear: () => {
+      try {
+        localStorage.clear();
+      } catch (e) {
+        console.warn(`Storage clear error:`, e);
+      }
+    }
+  };
+
   // Auth Session State
   const [loggedInUser, setLoggedInUser] = useState(null);
 
-  // Initialize and sync with localStorage
+  // Initialize and sync with storage
   useEffect(() => {
     const initData = (key, defaultVal, setter) => {
-      const stored = localStorage.getItem(key);
+      const stored = safeStorage.get(key);
       if (stored) {
         try {
           const parsed = JSON.parse(stored);
@@ -100,18 +133,18 @@ export const WmsDataProvider = ({ children }) => {
             const missing = (defaultVal || []).filter(d => !existingIds.has(d.id) && !existingIds.has(d.challanNo));
             if (missing.length > 0) {
               const merged = [...parsed, ...missing];
-              localStorage.setItem(key, JSON.stringify(merged));
+              safeStorage.set(key, merged);
               setter(merged);
               return;
             }
           }
           setter(parsed);
         } catch {
-          localStorage.setItem(key, JSON.stringify(defaultVal));
+          safeStorage.set(key, defaultVal);
           setter(defaultVal);
         }
       } else {
-        localStorage.setItem(key, JSON.stringify(defaultVal));
+        safeStorage.set(key, defaultVal);
         setter(defaultVal);
       }
     };
@@ -141,24 +174,24 @@ export const WmsDataProvider = ({ children }) => {
     initData('wms_reasons', defaultReasons, setReasons);
     initData('wms_returns', defaultReturns, setReturns);
 
-    const storedUser = localStorage.getItem('wms_logged_in_user');
+    const storedUser = safeStorage.get('wms_logged_in_user');
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
         if (parsedUser && typeof parsedUser === 'object' && !Array.isArray(parsedUser)) {
           setLoggedInUser(parsedUser);
         } else {
-          localStorage.removeItem('wms_logged_in_user');
+          safeStorage.remove('wms_logged_in_user');
         }
       } catch {
-        localStorage.removeItem('wms_logged_in_user');
+        safeStorage.remove('wms_logged_in_user');
       }
     }
   }, []);
 
-  // Helper to save state and localstorage
+  // Helper to save state and storage
   const saveState = (key, data, setter) => {
-    localStorage.setItem(key, JSON.stringify(data));
+    safeStorage.set(key, data);
     setter(data);
   };
 
@@ -180,7 +213,8 @@ export const WmsDataProvider = ({ children }) => {
 
   // 1. Session Auth Logic
   const loginUser = (username, password) => {
-    const found = users.find(u => u.username.toLowerCase() === username.toLowerCase().trim() && u.password === password);
+    const userPool = users.length > 0 ? users : defaultUsers;
+    const found = userPool.find(u => u.username.toLowerCase() === username.toLowerCase().trim() && u.password === password);
     if (!found) {
       return { success: false, message: 'Invalid username or password' };
     }
@@ -200,11 +234,46 @@ export const WmsDataProvider = ({ children }) => {
     return { success: true, user: sessionUser };
   };
 
+  const loginDirectly = (username = 'admin') => {
+    const userPool = users.length > 0 ? users : defaultUsers;
+    const found = userPool.find(u => u.username.toLowerCase() === username.toLowerCase().trim()) || userPool[0];
+    if (found) {
+      const sessionUser = {
+        username: found.username,
+        name: found.name,
+        role: found.role,
+        permissions: found.permissions
+      };
+      saveState('wms_logged_in_user', sessionUser, setLoggedInUser);
+      logAction('User Direct Demo Login', 'Authentication', 'Success', sessionUser);
+      return { success: true, user: sessionUser };
+    }
+    return { success: false };
+  };
+
+  const switchRole = (username) => {
+    const userPool = users.length > 0 ? users : defaultUsers;
+    const found = userPool.find(u => u.username.toLowerCase() === username.toLowerCase().trim());
+    if (found) {
+      const sessionUser = {
+        username: found.username,
+        name: found.name,
+        role: found.role,
+        permissions: found.permissions
+      };
+      saveState('wms_logged_in_user', sessionUser, setLoggedInUser);
+      logAction(`Switched Role to ${found.role}`, 'Authentication', 'Success', sessionUser);
+      return true;
+    }
+    return false;
+  };
+
   const logoutUser = () => {
     logAction('User Logged Out', 'Authentication');
-    localStorage.removeItem('wms_logged_in_user');
+    safeStorage.remove('wms_logged_in_user');
     setLoggedInUser(null);
   };
+
 
   // 2. Master Module CRUD Operations
   const addMasterItem = (tableKey, stateSetter, stateArray, item, moduleName) => {
@@ -1160,6 +1229,8 @@ export const WmsDataProvider = ({ children }) => {
 
       // Auth functions
       loginUser,
+      loginDirectly,
+      switchRole,
       logoutUser,
 
       // Master CRUD helper functions

@@ -14,6 +14,7 @@ export default function Header({ selectedWarehouse, setSelectedWarehouse }) {
   const { 
     loggedInUser, 
     logoutUser, 
+    switchRole,
     warehouses, 
     users,
     navigateTo 
@@ -49,16 +50,8 @@ export default function Header({ selectedWarehouse, setSelectedWarehouse }) {
   };
 
   const handleRoleSwitch = (username) => {
-    const userToSwitch = users.find(u => u.username === username);
-    if (userToSwitch) {
-      const sessionUser = {
-        username: userToSwitch.username,
-        name: userToSwitch.name,
-        role: userToSwitch.role,
-        permissions: userToSwitch.permissions
-      };
-      localStorage.setItem('wms_logged_in_user', JSON.stringify(sessionUser));
-      window.location.reload();
+    if (switchRole) {
+      switchRole(username);
     }
   };
 
@@ -175,8 +168,8 @@ export default function Header({ selectedWarehouse, setSelectedWarehouse }) {
                 </div>
                 <button
                   onClick={() => {
+                    setProfileMenuOpen(false);
                     logoutUser();
-                    window.location.reload();
                   }}
                   className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-rose-600 dark:text-rose-450 hover:bg-rose-50 dark:hover:bg-rose-955/20 text-left transition-colors font-medium"
                 >
