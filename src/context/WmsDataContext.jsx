@@ -88,6 +88,13 @@ export const WmsDataProvider = ({ children }) => {
       if (stored) {
         try {
           const parsed = JSON.parse(stored);
+          const expectsArray = Array.isArray(defaultVal);
+          const validShape = expectsArray
+            ? Array.isArray(parsed)
+            : parsed !== null && typeof parsed === 'object' && !Array.isArray(parsed);
+          if (!validShape) {
+            throw new Error(`Invalid stored data for ${key}`);
+          }
           if (key === 'wms_returns' && Array.isArray(parsed)) {
             const existingIds = new Set(parsed.map(p => p.id || p.challanNo));
             const missing = (defaultVal || []).filter(d => !existingIds.has(d.id) && !existingIds.has(d.challanNo));
@@ -99,7 +106,7 @@ export const WmsDataProvider = ({ children }) => {
             }
           }
           setter(parsed);
-        } catch (e) {
+        } catch {
           localStorage.setItem(key, JSON.stringify(defaultVal));
           setter(defaultVal);
         }
@@ -136,7 +143,16 @@ export const WmsDataProvider = ({ children }) => {
 
     const storedUser = localStorage.getItem('wms_logged_in_user');
     if (storedUser) {
-      setLoggedInUser(JSON.parse(storedUser));
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        if (parsedUser && typeof parsedUser === 'object' && !Array.isArray(parsedUser)) {
+          setLoggedInUser(parsedUser);
+        } else {
+          localStorage.removeItem('wms_logged_in_user');
+        }
+      } catch {
+        localStorage.removeItem('wms_logged_in_user');
+      }
     }
   }, []);
 
