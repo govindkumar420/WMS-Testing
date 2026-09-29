@@ -701,9 +701,17 @@ export const defaultDispatchInvoices = [
 
 export const defaultColdRooms = [
   { id: 'CR-1', name: 'Cold Room 1 (Apple/Berry)', minTemp: 0.0, maxTemp: 3.0, currentTemp: 1.8, currentHumidity: 90, status: 'Normal' },
-  { id: 'CR-2', name: 'Cold Room 2 (Citrus/Ripening)', minTemp: 4.0, maxTemp: 8.0, currentTemp: 5.2, currentHumidity: 85, status: 'Normal' },
+  { id: 'CR-2', name: 'Ripening Chamber 1 (Citrus)', minTemp: 4.0, maxTemp: 8.0, currentTemp: 5.2, currentHumidity: 85, status: 'Normal' },
   { id: 'CR-3', name: 'Deep Freezer (Greens)', minTemp: -2.0, maxTemp: 1.0, currentTemp: 2.5, currentHumidity: 92, status: 'Alert' }, // Triggered high alert
-  { id: 'CR-4', name: 'Ambient Stage Area', minTemp: 15.0, maxTemp: 22.0, currentTemp: 17.5, currentHumidity: 60, status: 'Normal' }
+  { id: 'CR-4', name: 'Ambient Stage Area', minTemp: 15.0, maxTemp: 22.0, currentTemp: 17.5, currentHumidity: 60, status: 'Normal' },
+  { id: 'CR-5', name: 'Cold Room 2 (Leafy Produce)', minTemp: 0.0, maxTemp: 3.0, currentTemp: 1.4, currentHumidity: 91, status: 'Normal' },
+  { id: 'CR-6', name: 'Cold Room 3 (Root Vegetables)', minTemp: 0.0, maxTemp: 3.0, currentTemp: 2.1, currentHumidity: 88, status: 'Normal' },
+  { id: 'CR-7', name: 'Cold Room 4 (Dairy)', minTemp: 0.0, maxTemp: 4.0, currentTemp: 2.8, currentHumidity: 84, status: 'Normal' },
+  { id: 'CR-8', name: 'Cold Room 5 (Fresh Produce)', minTemp: 0.0, maxTemp: 3.0, currentTemp: 1.6, currentHumidity: 89, status: 'Normal' },
+  { id: 'CR-9', name: 'Ripening Chamber 2 (Banana)', minTemp: 14.0, maxTemp: 18.0, currentTemp: 16.2, currentHumidity: 90, status: 'Normal' },
+  { id: 'CR-10', name: 'Ripening Chamber 3 (Mango)', minTemp: 18.0, maxTemp: 22.0, currentTemp: 20.1, currentHumidity: 88, status: 'Normal' },
+  { id: 'CR-11', name: 'Ripening Chamber 4 (Avocado)', minTemp: 16.0, maxTemp: 20.0, currentTemp: 18.4, currentHumidity: 87, status: 'Normal' },
+  { id: 'CR-12', name: 'Deep Freezer 2 (Frozen Stock)', minTemp: -22.0, maxTemp: -18.0, currentTemp: -20.0, currentHumidity: 78, status: 'Normal' }
 ];
 
 export const defaultAuditLogs = [

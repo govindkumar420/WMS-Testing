@@ -172,6 +172,16 @@ export const WmsDataProvider = ({ children }) => {
               return;
             }
           }
+          if (key === 'wms_cold_rooms' && Array.isArray(parsed)) {
+            const existingIds = new Set(parsed.map(room => room.id));
+            const missing = (defaultVal || []).filter(room => !existingIds.has(room.id));
+            if (missing.length > 0) {
+              const merged = [...parsed, ...missing];
+              safeStorage.set(key, merged);
+              setter(merged);
+              return;
+            }
+          }
           setter(parsed);
         } catch {
           safeStorage.set(key, defaultVal);
@@ -305,7 +315,13 @@ export const WmsDataProvider = ({ children }) => {
       if (dbCustomers && dbCustomers.length > 0) { setCustomers(dbCustomers); safeStorage.set('wms_customers', dbCustomers); }
       if (dbVehicles && dbVehicles.length > 0) { setVehicles(dbVehicles); safeStorage.set('wms_vehicles', dbVehicles); }
       if (dbInventory && dbInventory.length > 0) { setInventory(dbInventory); safeStorage.set('wms_inventory', dbInventory); }
-      if (dbColdRooms && dbColdRooms.length > 0) { setColdRooms(dbColdRooms); safeStorage.set('wms_cold_rooms', dbColdRooms); }
+      if (dbColdRooms && dbColdRooms.length > 0) {
+        const existingIds = new Set(dbColdRooms.map(room => room.id));
+        const missing = defaultColdRooms.filter(room => !existingIds.has(room.id));
+        const mergedColdRooms = [...dbColdRooms, ...missing];
+        setColdRooms(mergedColdRooms);
+        safeStorage.set('wms_cold_rooms', mergedColdRooms);
+      }
       if (dbLogs && dbLogs.length > 0) { setAuditLogs(dbLogs); safeStorage.set('wms_audit_logs', dbLogs); }
       if (dbSettings && dbSettings.length > 0) { setSettings(dbSettings[0]); safeStorage.set('wms_settings', dbSettings[0]); }
       if (dbCompanies && dbCompanies.length > 0) { setCompanies(dbCompanies); safeStorage.set('wms_companies', dbCompanies); }

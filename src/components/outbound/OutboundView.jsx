@@ -79,7 +79,6 @@ export default function OutboundView() {
   // 2. Picking & Picklist state
   const [selectedSo, setSelectedSo] = useState(null);
   const [activePicks, setActivePicks] = useState(null); // {picks, isFullySatisfied, shortfall}
-  const [selectedPicklistIds, setSelectedPicklistIds] = useState([]);
   const [picklistFilterQuery, setPicklistFilterQuery] = useState('');
   const [picklistStatusFilter, setPicklistStatusFilter] = useState('All');
 
@@ -1112,72 +1111,32 @@ export default function OutboundView() {
               </div>
             </div>
 
-            {/* Exact Picklist Ledger Table matching user screenshot */}
+            {/* Picklist ledger */}
             <div className="overflow-x-auto border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-xs">
-              <table className="w-full text-left text-[11px] border-collapse min-w-[1250px]">
+              <table className="w-full text-left text-[11px] border-collapse min-w-[1150px]">
                 <thead>
                   <tr className="bg-[#009688] text-white font-bold text-[11px] select-none border-b border-[#00796b]">
-                    <th className="p-3 text-center w-10">
-                      <input
-                        type="checkbox"
-                        checked={selectedPicklistIds.length > 0 && selectedPicklistIds.length === filteredPicklists.length}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setSelectedPicklistIds(filteredPicklists.map(p => p.id));
-                          } else {
-                            setSelectedPicklistIds([]);
-                          }
-                        }}
-                        className="rounded border-white/60 text-emerald-600 focus:ring-0 cursor-pointer"
-                      />
-                    </th>
                     <th className="p-3 text-center whitespace-nowrap">Picking ID</th>
                     <th className="p-3 text-center whitespace-nowrap">Order Id</th>
                     <th className="p-3 text-center whitespace-nowrap">Sales Delivery No.</th>
                     <th className="p-3 whitespace-nowrap">Customer Name</th>
-                    <th className="p-3 text-center whitespace-nowrap">
-                      <div className="flex items-center justify-center gap-1">
-                        <span>Suggested Picklist</span>
-                      </div>
-                    </th>
-                    <th className="p-3 text-center whitespace-nowrap">Billing / Delivery Location</th>
+                    <th className="p-3 text-center whitespace-nowrap">Delivery Location</th>
                     <th className="p-3 text-center whitespace-nowrap">Area</th>
-                    <th className="p-3 text-center whitespace-nowrap">Channel And Web Store</th>
                     <th className="p-3 text-center whitespace-nowrap">Picking Issue Date</th>
-                    <th className="p-3 text-center whitespace-nowrap">Picking END Date</th>
-                    <th className="p-3 text-center whitespace-nowrap">Pick Wise</th>
-                    <th className="p-3 text-center whitespace-nowrap">Picklist Generate Mode</th>
+                    <th className="p-3 text-center whitespace-nowrap">Picking End Date</th>
                     <th className="p-3 text-center whitespace-nowrap">Picking Status</th>
                     <th className="p-3 text-center whitespace-nowrap">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800 bg-white dark:bg-[#0c0c0f]">
                   {filteredPicklists.map(pl => {
-                    const isSelected = selectedPicklistIds.includes(pl.id);
                     const isDone = pl.pickingStatus === 'Picking Done' || pl.status === 'Picking Done';
 
                     return (
                       <tr
                         key={pl.id}
-                        className={`hover:bg-zinc-50 dark:hover:bg-zinc-900/40 transition-colors ${isSelected ? 'bg-emerald-50/50 dark:bg-emerald-950/20' : ''
-                          }`}
+                        className="hover:bg-zinc-50 dark:hover:bg-zinc-900/40 transition-colors"
                       >
-                        {/* Checkbox */}
-                        <td className="p-3 text-center">
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setSelectedPicklistIds(prev => [...prev, pl.id]);
-                              } else {
-                                setSelectedPicklistIds(prev => prev.filter(id => id !== pl.id));
-                              }
-                            }}
-                            className="rounded border-zinc-300 text-emerald-600 focus:ring-0 cursor-pointer"
-                          />
-                        </td>
-
                         {/* Picking ID */}
                         <td className="p-3 text-center font-mono font-medium text-zinc-900 dark:text-zinc-100 whitespace-nowrap">
                           {pl.pickingId}
@@ -1198,26 +1157,6 @@ export default function OutboundView() {
                           {pl.customerName}
                         </td>
 
-                        {/* Suggested Picklist (Red PDF icon + checkbox) */}
-                        <td className="p-3 text-center whitespace-nowrap">
-                          <div className="inline-flex items-center justify-center gap-1.5">
-                            <button
-                              type="button"
-                              onClick={() => handleOpenPicklistFromRecord(pl)}
-                              className="p-1 text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded border border-rose-200 dark:border-rose-900/50 transition-colors"
-                              title="View / Print Picklist PDF Slip"
-                            >
-                              <FileText className="h-4 w-4 text-rose-600" />
-                            </button>
-                            <span className="text-zinc-300 dark:text-zinc-700">|</span>
-                            <input
-                              type="checkbox"
-                              defaultChecked
-                              className="rounded border-zinc-300 text-rose-600 focus:ring-0 cursor-pointer h-3.5 w-3.5"
-                            />
-                          </div>
-                        </td>
-
                         {/* Billing / Delivery Location */}
                         <td className="p-3 text-center text-zinc-700 dark:text-zinc-300 whitespace-nowrap">
                           {pl.deliveryLocation || '54 Acre'}
@@ -1226,11 +1165,6 @@ export default function OutboundView() {
                         {/* Area */}
                         <td className="p-3 text-center font-bold text-[10px] text-zinc-700 dark:text-zinc-300 uppercase whitespace-nowrap">
                           {pl.area || 'STAFF KITCHEN'}
-                        </td>
-
-                        {/* Channel And Web Store */}
-                        <td className="p-3 text-center text-zinc-400 whitespace-nowrap">
-                          {pl.channel || ''}
                         </td>
 
                         {/* Picking Issue Date */}
@@ -1243,16 +1177,6 @@ export default function OutboundView() {
                           {pl.pickingEndDate || ''}
                         </td>
 
-                        {/* Pick Wise */}
-                        <td className="p-3 text-center text-zinc-700 dark:text-zinc-300 whitespace-nowrap">
-                          {pl.pickWise || 'Batch Wise'}
-                        </td>
-
-                        {/* Picklist Generate Mode */}
-                        <td className="p-3 text-center font-semibold text-zinc-700 dark:text-zinc-300 whitespace-nowrap">
-                          {pl.picklistGenerateMode || 'HHT'}
-                        </td>
-
                         {/* Picking Status */}
                         <td className="p-3 text-center font-semibold whitespace-nowrap">
                           {isDone ? (
@@ -1261,7 +1185,7 @@ export default function OutboundView() {
                             </span>
                           ) : (
                             <span className="text-amber-700 dark:text-amber-400 text-[10px] font-bold">
-                              Picklist completed. But Picking pending
+                              Picking pending
                             </span>
                           )}
                         </td>
@@ -1342,7 +1266,7 @@ export default function OutboundView() {
 
                   {filteredPicklists.length === 0 && (
                     <tr>
-                      <td colSpan={15} className="py-12 text-center text-xs text-zinc-400 italic">
+                      <td colSpan={10} className="py-12 text-center text-xs text-zinc-400 italic">
                         No picklists found matching the filter criteria. Release an order from Sales Orders tab to generate a picklist.
                       </td>
                     </tr>

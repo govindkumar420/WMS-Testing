@@ -391,14 +391,14 @@ export default function DashboardView({ setCurrentView }) {
   }, [coldRooms]);
 
   return (
-    <div className="space-y-6 max-w-[1680px] mx-auto p-4 sm:p-6 animate-in fade-in-50 duration-200">
+    <div className="mx-auto max-w-[1680px] space-y-4 p-4 sm:space-y-6 sm:p-6 animate-in fade-in-50 duration-200">
       
       {/* ------------------------------------------------------------- */}
       {/* HEADER & EXECUTIVE TOOLBAR */}
       {/* ------------------------------------------------------------- */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-[#0c0c0f] border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 shadow-xs">
-        <div>
-          <div className="flex items-center gap-2.5">
+      <div className="flex flex-col justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-xs sm:p-5 xl:flex-row xl:items-center dark:border-zinc-800 dark:bg-[#0c0c0f]">
+        <div className="min-w-0">
+          <div className="flex min-w-0 flex-wrap items-center gap-2.5">
             <h1 className="text-2xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight">Enterprise Warehouse Operations</h1>
             <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800/50">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -411,7 +411,7 @@ export default function DashboardView({ setCurrentView }) {
         </div>
 
         {/* Quick Dashboard Focus Switcher */}
-        <div className="flex items-center gap-1.5 bg-zinc-100/80 dark:bg-zinc-900/80 p-1 rounded-xl border border-zinc-200/60 dark:border-zinc-800/60 self-start md:self-auto overflow-x-auto max-w-full">
+        <div className="flex max-w-full min-w-0 items-center gap-1.5 self-start overflow-x-auto rounded-xl border border-zinc-200/60 bg-zinc-100/80 p-1 xl:self-auto dark:border-zinc-800/60 dark:bg-zinc-900/80">
           {[
             { id: 'all', label: 'Complete Overview' },
             { id: 'inbound', label: 'Inward & QC' },
@@ -436,7 +436,7 @@ export default function DashboardView({ setCurrentView }) {
       {/* ------------------------------------------------------------- */}
       {/* PRIMARY 14 CORE METRICS GRID (Top Section) */}
       {/* ------------------------------------------------------------- */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-3.5">
+      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-7">
 
         {/* 1. TOTAL STOCK */}
         <div 
@@ -634,12 +634,12 @@ export default function DashboardView({ setCurrentView }) {
       {/* ------------------------------------------------------------- */}
       {/* SECONDARY ROW: INWARD / OUTWARD / VARIANCE / CAPACITY CARDS */}
       {/* ------------------------------------------------------------- */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-4">
         
         {/* 8. TODAY'S INWARD */}
         <div 
           onClick={() => handleNav('inbound', 'receiving')}
-          className="cursor-pointer bg-white dark:bg-[#0c0c0f] border border-zinc-200 dark:border-zinc-800 hover:border-emerald-500/40 rounded-xl p-4.5 shadow-xs transition-all"
+          className="cursor-pointer bg-white dark:bg-[#0c0c0f] border border-zinc-200 dark:border-zinc-800 hover:border-emerald-500/40 rounded-xl p-4 shadow-xs transition-all"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -671,7 +671,7 @@ export default function DashboardView({ setCurrentView }) {
         {/* 9. TODAY'S OUTWARD */}
         <div 
           onClick={() => handleNav('outbound', 'dispatch')}
-          className="cursor-pointer bg-white dark:bg-[#0c0c0f] border border-zinc-200 dark:border-zinc-800 hover:border-blue-500/40 rounded-xl p-4.5 shadow-xs transition-all"
+          className="cursor-pointer bg-white dark:bg-[#0c0c0f] border border-zinc-200 dark:border-zinc-800 hover:border-blue-500/40 rounded-xl p-4 shadow-xs transition-all"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -703,7 +703,7 @@ export default function DashboardView({ setCurrentView }) {
         {/* 10. STOCK VARIANCE */}
         <div 
           onClick={() => handleNav('store', 'cycle_count')}
-          className="cursor-pointer bg-white dark:bg-[#0c0c0f] border border-zinc-200 dark:border-zinc-800 hover:border-amber-500/40 rounded-xl p-4.5 shadow-xs transition-all"
+          className="cursor-pointer bg-white dark:bg-[#0c0c0f] border border-zinc-200 dark:border-zinc-800 hover:border-amber-500/40 rounded-xl p-4 shadow-xs transition-all"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -736,7 +736,7 @@ export default function DashboardView({ setCurrentView }) {
         {/* FACILITY CAPACITY & COLD CHAIN HEALTH */}
         <div 
           onClick={() => handleNav('coldchain')}
-          className="cursor-pointer bg-white dark:bg-[#0c0c0f] border border-zinc-200 dark:border-zinc-800 hover:border-emerald-500/40 rounded-xl p-4.5 shadow-xs transition-all"
+          className="cursor-pointer bg-white dark:bg-[#0c0c0f] border border-zinc-200 dark:border-zinc-800 hover:border-emerald-500/40 rounded-xl p-4 shadow-xs transition-all"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -770,12 +770,12 @@ export default function DashboardView({ setCurrentView }) {
       {/* ------------------------------------------------------------- */}
       {/* MIDDLE SECTION: AGEING, VEHICLES & LOW STOCK */}
       {/* ------------------------------------------------------------- */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
 
         {/* --------------------------------------------------------- */}
         {/* LEFT COLUMN: INVENTORY AGEING & PIPELINE FLOW (7 Cols) */}
         {/* --------------------------------------------------------- */}
-        <div className="lg:col-span-7 space-y-6">
+        <div className="space-y-6 xl:col-span-7">
           
           {/* 11. INVENTORY AGEING & FEFO SHELF LIFE */}
           <div className="bg-white dark:bg-[#0c0c0f] border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 shadow-xs">
@@ -789,7 +789,7 @@ export default function DashboardView({ setCurrentView }) {
               </div>
               
               {/* Quick filter pills */}
-              <div className="flex items-center gap-1 bg-zinc-50 dark:bg-zinc-900 p-1 rounded-lg border border-zinc-200 dark:border-zinc-800 text-[10px] font-semibold">
+              <div className="flex flex-wrap items-center gap-1 bg-zinc-50 dark:bg-zinc-900 p-1 rounded-lg border border-zinc-200 dark:border-zinc-800 text-[10px] font-semibold">
                 <button
                   onClick={() => setAgeingFilter('all')}
                   className={`px-2 py-1 rounded-md transition-colors ${ageingFilter === 'all' ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-xs font-bold' : 'text-zinc-400 hover:text-zinc-200'}`}
@@ -899,7 +899,7 @@ export default function DashboardView({ setCurrentView }) {
               </table>
             </div>
 
-            <div className="flex justify-between items-center mt-3 pt-2 text-xs">
+            <div className="mt-3 flex flex-col gap-2 pt-2 text-xs sm:flex-row sm:items-center sm:justify-between">
               <span className="text-[11px] text-zinc-400">FEFO (First Expiring First Out) picking rule active.</span>
               <button 
                 onClick={() => handleNav('reports', 'ageing')}
@@ -960,7 +960,7 @@ export default function DashboardView({ setCurrentView }) {
         {/* --------------------------------------------------------- */}
         {/* RIGHT COLUMN: VEHICLE STATUS & LOW STOCK (5 Cols) */}
         {/* --------------------------------------------------------- */}
-        <div className="lg:col-span-5 space-y-6">
+        <div className="space-y-6 xl:col-span-5">
 
           {/* 12. VEHICLE STATUS MONITOR */}
           <div className="bg-white dark:bg-[#0c0c0f] border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 shadow-xs">
@@ -1181,7 +1181,7 @@ export default function DashboardView({ setCurrentView }) {
           </table>
         </div>
 
-        <div className="flex justify-between items-center mt-3 pt-2 text-xs">
+        <div className="mt-3 flex flex-col gap-2 pt-2 text-xs sm:flex-row sm:items-center sm:justify-between">
           <span className="text-[11px] text-zinc-400">Displaying top 10 most recent verified operational transactions.</span>
           <button
             onClick={() => handleNav('reports', 'audit')}

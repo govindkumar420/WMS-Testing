@@ -26,8 +26,6 @@ export default function Sidebar() {
     navigateTo
   } = useContext(WmsDataContext);
 
-  const activeTab = activeTabs.general || activeTabs.inbound || activeTabs.store || activeTabs.outbound || activeTabs.return || 'products';
-
   // Accordion open/close state mapping
   const [openSections, setOpenSections] = useState({
     general: currentView === 'general' || currentView === 'mock',
@@ -40,12 +38,13 @@ export default function Sidebar() {
     store: currentView === 'store',
     reports: currentView === 'reports'
   });
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedSubNav, setSelectedSubNav] = useState(null);
 
   const toggleSection = (sectionId) => {
-    setOpenSections(prev => ({
-      ...prev,
-      [sectionId]: !prev[sectionId]
-    }));
+    setOpenSections(prev => Object.fromEntries(
+      Object.keys(prev).map(id => [id, id === sectionId && !prev[sectionId]])
+    ));
   };
 
   if (!loggedInUser) return null;
@@ -150,9 +149,7 @@ export default function Sidebar() {
       items: [
         { label: 'Order Management (SO)', view: 'outbound', tab: 'so' },
         { label: 'Picklist & Picking Management', view: 'outbound', tab: 'picking' },
-        { label: 'Packing Management', view: 'outbound', tab: 'picking' },
         { label: 'QA & QC Outbound Management', view: 'outbound', tab: 'dispatch' },
-        { label: 'Shipment Dispatch Management', view: 'outbound', tab: 'dispatch' },
         { label: 'Proof of Delivery (POD)', view: 'outbound', tab: 'delivery' },
         { label: 'Outward Invoice & Challan', view: 'outbound', tab: 'invoice_challan' },
         { label: 'Engine & Kitting Management', view: 'mock', tab: 'kitting' }
@@ -217,10 +214,19 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 bg-white dark:bg-[#0c0c0f] border-r border-zinc-200 dark:border-zinc-800 flex flex-col justify-between transition-colors duration-200 h-[calc(100vh-3.5rem)] sticky top-14">
-      <div className="p-4 space-y-1.5 overflow-y-auto flex-1 select-none scrollbar-thin dark:scrollbar-thumb-zinc-800">
+    <aside className="relative z-30 h-[calc(100vh-3.5rem)] w-14 shrink-0 sticky top-14">
+      <div
+        onMouseEnter={() => setIsExpanded(true)}
+        onMouseLeave={() => setIsExpanded(false)}
+        onFocus={() => setIsExpanded(true)}
+        onBlur={event => {
+          if (!event.currentTarget.contains(event.relatedTarget)) setIsExpanded(false);
+        }}
+        className={`absolute inset-y-0 left-0 flex flex-col justify-between border-r border-zinc-200 bg-white shadow-lg transition-[width] duration-300 ease-out dark:border-zinc-800 dark:bg-[#0c0c0f] ${isExpanded ? 'w-64' : 'w-14'}`}
+      >
+      <div className={`${isExpanded ? 'p-4' : 'p-2'} space-y-1.5 overflow-y-auto flex-1 select-none scrollbar-thin dark:scrollbar-thumb-zinc-800`}>
 
-        <span className="block px-3 py-1 text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
+        <span aria-hidden={!isExpanded} className={`block overflow-hidden whitespace-nowrap px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-zinc-400 transition-[opacity,max-width] duration-200 ease-out dark:text-zinc-500 ${isExpanded ? 'max-w-48 opacity-100 delay-75' : 'max-w-0 opacity-0'}`}>
           Gnosis WMS Control
         </span>
 
@@ -240,6 +246,8 @@ export default function Sidebar() {
 
                 {/* Main Accordion Button */}
                 <button
+                  title={isExpanded ? undefined : menu.label}
+                  aria-label={menu.label}
                   onClick={() => {
                     if (hasChildren) {
                       toggleSection(menu.id);
@@ -247,39 +255,56 @@ export default function Sidebar() {
                       menu.action();
                     }
                   }}
-                  className={`w-full flex items-center justify-between px-3 py-2 text-xs font-semibold rounded-lg transition-all ${isRootActive
+                  className={`w-full flex items-center ${isExpanded ? 'justify-between px-3' : 'justify-center px-0'} py-2 text-xs font-semibold rounded-lg transition-all ${isRootActive
                     ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 border-l-2 border-emerald-600 dark:border-emerald-400'
                     : 'text-zinc-650 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
                     }`}
                 >
                   <div className="flex items-center gap-2.5">
                     <MenuIcon className={`h-4 w-4 ${isRootActive ? 'text-emerald-600 dark:text-emerald-400' : 'text-zinc-450'}`} />
-                    <span>{menu.label}</span>
+                    <span aria-hidden={!isExpanded} className={`overflow-hidden whitespace-nowrap transition-[opacity,max-width] duration-200 ease-out ${isExpanded ? 'max-w-48 opacity-100 delay-75' : 'max-w-0 opacity-0'}`}>
+                      {menu.label}
+                    </span>
                   </div>
-                  {hasChildren && (
+                  {isExpanded && hasChildren && (
                     isSectionOpen ? <ChevronDown className="h-3 w-3 opacity-60" /> : <ChevronRight className="h-3 w-3 opacity-60" />
                   )}
                 </button>
 
                 {/* Submenu links */}
-                {hasChildren && isSectionOpen && (
-                  <div className="pl-6.5 pr-2 py-0.5 space-y-0.5 border-l border-zinc-100 dark:border-zinc-800 ml-4.5 mt-0.5">
-                    {menu.items.map((item, idx) => {
-                      // Check if active view matches item
-                      const isItemActive = currentView === item.view && activeTab === item.tab;
-                      return (
-                        <button
-                          key={idx}
-                          onClick={() => navigateTo(item.view, item.tab)}
-                          className={`w-full text-left px-3 py-1.5 text-[11px] font-medium rounded-md transition-colors ${isItemActive
-                            ? 'text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/5'
-                            : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-450 dark:hover:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-900/30'
-                            }`}
-                        >
-                          {item.label}
-                        </button>
-                      );
-                    })}
+                {isExpanded && hasChildren && (
+                  <div
+                    aria-hidden={!isSectionOpen}
+                    inert={!isSectionOpen}
+                    className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${isSectionOpen ? 'grid-rows-[1fr] opacity-100 mt-0.5' : 'grid-rows-[0fr] opacity-0 mt-0'}`}
+                  >
+                    <div className="min-h-0 overflow-hidden">
+                      <div className="pl-6.5 pr-2 py-0.5 space-y-0.5 border-l border-zinc-100 dark:border-zinc-800 ml-4.5">
+                        {menu.items.map((item, idx) => {
+                          const itemId = `${menu.id}-${idx}`;
+                          const hasSelectedItemForCurrentView = selectedSubNav?.view === currentView &&
+                            activeTabs[currentView] === selectedSubNav.tab;
+                          const isItemActive = hasSelectedItemForCurrentView
+                            ? selectedSubNav.id === itemId
+                            : currentView === item.view && activeTabs[item.view] === item.tab;
+                          return (
+                            <button
+                              key={idx}
+                              onClick={() => {
+                                setSelectedSubNav({ id: itemId, view: item.view, tab: item.tab });
+                                navigateTo(item.view, item.tab);
+                              }}
+                              className={`w-full text-left px-3 py-1.5 text-[11px] font-medium rounded-md transition-colors ${isItemActive
+                                ? 'text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/5'
+                                : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-450 dark:hover:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-900/30'
+                                }`}
+                            >
+                              {item.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
                 )}
 
@@ -291,22 +316,23 @@ export default function Sidebar() {
       </div>
 
       {/* Footer session info */}
-      <div className="p-3 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/10">
-        <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-xl p-2.5 border border-zinc-150 dark:border-zinc-800/80 flex items-center gap-2.5">
+      <div className={`${isExpanded ? 'p-3' : 'p-2'} border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/10`}>
+        <div title={isExpanded ? undefined : loggedInUser.name} className={`bg-zinc-50 dark:bg-zinc-900/50 rounded-xl ${isExpanded ? 'p-2.5 gap-2.5' : 'p-1.5 justify-center'} border border-zinc-150 dark:border-zinc-800/80 flex items-center`}>
           <div className="bg-emerald-100 dark:bg-emerald-900/30 p-1.5 rounded-lg text-emerald-600 dark:text-emerald-400">
             <User className="h-3.5 w-3.5" />
           </div>
-          <div className="overflow-hidden">
+          {isExpanded && <div className="overflow-hidden">
             <span className="block text-[10px] font-bold text-zinc-800 dark:text-zinc-200 truncate leading-tight">
               {loggedInUser.name}
             </span>
             <span className="block text-[8px] text-zinc-400 capitalize truncate mt-0.5">
               {loggedInUser.role}
             </span>
-          </div>
+          </div>}
         </div>
       </div>
 
+      </div>
     </aside>
   );
 }

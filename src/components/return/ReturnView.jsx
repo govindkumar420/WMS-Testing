@@ -302,25 +302,25 @@ export default function ReturnView() {
   };
 
   return (
-    <div className="max-w-[1600px] mx-auto p-4 md:p-6 space-y-6 animate-in fade-in-50 duration-200">
+    <div className="mx-auto max-w-[1600px] space-y-4 p-4 sm:space-y-6 sm:p-6 animate-in fade-in-50 duration-200">
 
       {/* Top Header & Dropdown View Selector */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white dark:bg-[#0c0c0f] border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 shadow-xs">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-emerald-600/10 text-emerald-600 dark:text-emerald-400">
+      <div className="flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-xs sm:p-5 xl:flex-row xl:items-center xl:justify-between dark:border-zinc-800 dark:bg-[#0c0c0f]">
+        <div className="flex min-w-0 items-start gap-3 sm:items-center">
+          <div className="shrink-0 rounded-xl bg-emerald-600/10 p-2.5 text-emerald-600 dark:text-emerald-400">
             <RotateCcw className="h-6 w-6" />
           </div>
-          <div>
-            <h1 className="text-xl font-extrabold text-zinc-900 dark:text-zinc-50 tracking-tight">Returns Control</h1>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+          <div className="min-w-0">
+            <h1 className="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">Returns Control</h1>
+            <p className="mt-1 max-w-3xl text-xs leading-5 text-zinc-500 dark:text-zinc-400">
               Manage Sales Return POD confirmations, vendor rejection return logs, local clearance sales, and scrap quarantine.
             </p>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex w-full flex-wrap items-center gap-2 sm:gap-3 xl:w-auto xl:shrink-0">
           {/* Main Dropdown requested by user: Sales return, QC return, All QC rejection & return */}
-          <div className="flex items-center gap-2 bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-1.5 shadow-2xs">
+          <div className="flex max-w-full flex-wrap items-center gap-2 rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-1.5 shadow-2xs dark:border-zinc-800 dark:bg-zinc-900/60">
             <label htmlFor="return-control-dropdown" className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 flex items-center gap-1.5">
               <SlidersHorizontal className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
               <span>Return Process:</span>
@@ -329,7 +329,7 @@ export default function ReturnView() {
               id="return-control-dropdown"
               value={activeTab}
               onChange={(e) => setActiveTab(e.target.value)}
-              className="bg-white dark:bg-[#0c0c0f] border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 text-xs font-bold rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 cursor-pointer shadow-2xs"
+              className="max-w-full bg-white dark:bg-[#0c0c0f] border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 text-xs font-bold rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 cursor-pointer shadow-2xs"
             >
               <option value="cust_returns">Sales return</option>
               <option value="supplier_returns">QC return</option>
@@ -339,7 +339,7 @@ export default function ReturnView() {
 
           <button
             onClick={() => setShowNewReturnForm(true)}
-            className="flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl px-4 py-2 text-xs transition-all shadow-sm active:scale-95"
+            className="flex shrink-0 items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-emerald-700 active:scale-95"
           >
             <Plus className="h-4 w-4" />
             <span>Log Return</span>
@@ -359,7 +359,7 @@ export default function ReturnView() {
                 <button
                   key={tab.id}
                   onClick={() => setSalesSubTab(tab.id)}
-                  className={`px-4 py-3 text-xs font-semibold border-b-2 whitespace-nowrap transition-all ${isActive
+                  className={`shrink-0 px-3 py-3 text-xs font-semibold border-b-2 whitespace-nowrap transition-all sm:px-4 ${isActive
                       ? 'border-emerald-700 text-emerald-700 dark:text-emerald-400 font-bold bg-emerald-50/50 dark:bg-emerald-950/10 rounded-t-lg'
                       : 'border-transparent text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:border-zinc-300'
                     }`}
@@ -370,7 +370,7 @@ export default function ReturnView() {
             })}
           </div>
 
-          {/* Action Ribbon: Advance Search (teal) & Download report in excel */}
+          {/* Return search and export controls */}
           <div className="bg-[#2e7d5e] dark:bg-[#1b4332] text-white p-4 rounded-xl shadow-sm space-y-4">
             <div className="flex flex-wrap items-center gap-3">
               <button
@@ -380,7 +380,7 @@ export default function ReturnView() {
                     : 'bg-[#388e3c] text-white hover:bg-[#2e7d32]'
                   }`}
               >
-                Advance Search
+                Advanced Search
               </button>
 
               <button
@@ -388,15 +388,15 @@ export default function ReturnView() {
                 className="px-4 py-1.5 text-xs font-semibold bg-white/10 hover:bg-white/20 border border-white/30 text-white rounded transition-colors flex items-center gap-1.5 shadow-2xs"
               >
                 <Download className="h-3.5 w-3.5" />
-                <span>Download report in excel</span>
+                <span>Export report</span>
               </button>
             </div>
 
-            {/* Advance Search Filters Row matching screenshot */}
+            {/* Advanced search filters */}
             {advanceSearchOpen && (
-              <div className="flex flex-wrap items-center gap-3 pt-2 text-xs">
+              <div className="flex w-full flex-nowrap items-center gap-3 overflow-x-auto pt-2 text-xs xl:justify-center">
                 {/* Select Filter Category */}
-                <div className="min-w-[140px]">
+                <div className="min-w-[140px] shrink-0">
                   <select
                     value={searchField}
                     onChange={(e) => setSearchField(e.target.value)}
@@ -411,7 +411,7 @@ export default function ReturnView() {
                 </div>
 
                 {/* Input text */}
-                <div className="min-w-[200px] flex-1 max-w-xs">
+                <div className="min-w-[200px] max-w-xs shrink-0 flex-1">
                   <input
                     type="text"
                     placeholder="Please Enter"
@@ -422,7 +422,7 @@ export default function ReturnView() {
                 </div>
 
                 {/* Date range From & To */}
-                <div className="flex items-center gap-2 text-white font-medium">
+                <div className="flex shrink-0 items-center gap-2 whitespace-nowrap text-white font-medium">
                   <span>From :</span>
                   <input
                     type="date"
@@ -432,7 +432,7 @@ export default function ReturnView() {
                   />
                 </div>
 
-                <div className="flex items-center gap-2 text-white font-medium">
+                <div className="flex shrink-0 items-center gap-2 whitespace-nowrap text-white font-medium">
                   <span>To :</span>
                   <input
                     type="date"
@@ -442,13 +442,6 @@ export default function ReturnView() {
                   />
                 </div>
 
-                {/* Search Trigger Button */}
-                <button
-                  onClick={() => { }}
-                  className="bg-[#00b4d8] hover:bg-[#0096c7] text-white font-bold px-4 py-1.5 rounded text-xs tracking-wider transition-colors shadow-sm ml-auto sm:ml-0"
-                >
-                  ADVANCE SEARCH
-                </button>
               </div>
             )}
           </div>
@@ -458,17 +451,17 @@ export default function ReturnView() {
             <h2 className="text-base font-extrabold text-[#1b7a5a] dark:text-emerald-400 tracking-wider uppercase">
               RETURN CONFIRMATION DATA
             </h2>
-            <p className="text-[11px] text-zinc-600 dark:text-zinc-400 mt-0.5">
-              Searched values : Default Search | Showing {salesReturnsBySubTab.length} by default of {salesReturnsBySubTab.length} entries
+            <p className="mt-1 text-[11px] text-zinc-600 dark:text-zinc-400">
+              Showing {salesReturnsBySubTab.length} return {salesReturnsBySubTab.length === 1 ? 'record' : 'records'}
             </p>
           </div>
 
           {/* RETURN DATA TABLE */}
           <div className="bg-white dark:bg-[#0c0c0f] border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-xs">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
+                <table className="w-full min-w-[720px] text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-[#1b7a5a] text-white font-semibold text-[11px]">
+                  <tr className="whitespace-nowrap bg-[#1b7a5a] text-white font-semibold text-[11px]">
                     <th className="p-3 border-r border-[#2a8b6c] whitespace-nowrap">Delivery Challan No.</th>
                     <th className="p-3 border-r border-[#2a8b6c] whitespace-nowrap">Sales Delivery No</th>
                     <th className="p-3 border-r border-[#2a8b6c] whitespace-nowrap text-center">Total No of Products</th>
@@ -554,7 +547,7 @@ export default function ReturnView() {
 
       {/* VIEW 2: QC RETURN (Purchase / Vendor Returns) */}
       {activeTab === 'supplier_returns' && (
-        <div className="bg-white dark:bg-[#0c0c0f] border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xs p-6 space-y-4">
+        <div className="space-y-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-xs sm:p-6 dark:border-zinc-800 dark:bg-[#0c0c0f]">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h2 className="text-base font-bold text-zinc-900 dark:text-zinc-50">QC Return (Vendor Rejections)</h2>
@@ -570,9 +563,9 @@ export default function ReturnView() {
           </div>
 
           <div className="overflow-x-auto border border-zinc-200 dark:border-zinc-800 rounded-xl">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full min-w-[1080px] text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-zinc-50 dark:bg-zinc-900/60 border-b border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 font-semibold">
+                <tr className="whitespace-nowrap bg-zinc-50 dark:bg-zinc-900/60 border-b border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 font-semibold">
                   <th className="p-3">Ref Return No</th>
                   <th className="p-3">Supplier Name</th>
                   <th className="p-3">Product Description</th>
@@ -614,16 +607,16 @@ export default function ReturnView() {
 
       {/* VIEW 3: ALL QC REJECTION & RETURN (Comprehensive Logs & Audits) */}
       {activeTab === 'returns_qc' && (
-        <div className="bg-white dark:bg-[#0c0c0f] border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xs p-6 space-y-6">
+        <div className="space-y-6 rounded-xl border border-zinc-200 bg-white p-4 shadow-xs sm:p-6 dark:border-zinc-800 dark:bg-[#0c0c0f]">
           <div>
             <h2 className="text-base font-bold text-zinc-900 dark:text-zinc-50">All QC Rejection & Return Master Logs</h2>
             <p className="text-xs text-zinc-500 dark:text-zinc-400">Complete historical register of all customer sales returns, POD rejections, supplier returns, and quarantine audits.</p>
           </div>
 
           <div className="overflow-x-auto border border-zinc-200 dark:border-zinc-800 rounded-xl">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full min-w-[1240px] text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-zinc-50 dark:bg-zinc-900/60 border-b border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 font-semibold">
+                <tr className="whitespace-nowrap bg-zinc-50 dark:bg-zinc-900/60 border-b border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 font-semibold">
                   <th className="p-3">Ref No</th>
                   <th className="p-3">Return Type</th>
                   <th className="p-3">Challan / Delivery No</th>
@@ -673,8 +666,8 @@ export default function ReturnView() {
 
       {/* RETURN CONFIRMATION MODAL (Triggered when user clicks 'RETURN CONFIRMATION' on any row) */}
       {selectedReturnForAction && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
-          <div className="bg-white dark:bg-[#0c0c0f] border border-zinc-200 dark:border-zinc-800 rounded-2xl max-w-2xl w-full p-6 space-y-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-2 sm:p-4 animate-in fade-in duration-150">
+          <div className="max-h-[90vh] w-full max-w-2xl space-y-5 overflow-y-auto rounded-2xl border border-zinc-200 bg-white p-4 shadow-2xl sm:space-y-6 sm:p-6 dark:border-zinc-800 dark:bg-[#0c0c0f]">
 
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-4">
@@ -695,18 +688,18 @@ export default function ReturnView() {
             </div>
 
             {/* Challan & Reference Summary Info Cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-zinc-50 dark:bg-zinc-900/60 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 text-xs">
-              <div>
+            <div className="grid grid-cols-1 gap-3 rounded-xl border border-zinc-200 bg-zinc-50 p-3 text-xs sm:grid-cols-2 sm:p-4 xl:grid-cols-4 dark:border-zinc-800 dark:bg-zinc-900/60">
+              <div className="min-w-0">
                 <span className="text-[10px] text-zinc-400 uppercase font-bold block">Delivery Challan</span>
-                <span className="font-mono font-extrabold text-zinc-900 dark:text-zinc-50">{selectedReturnForAction.challanNo || 'GVL/08165/26-27'}</span>
+                <span className="break-all font-mono font-extrabold text-zinc-900 dark:text-zinc-50">{selectedReturnForAction.challanNo || 'GVL/08165/26-27'}</span>
               </div>
-              <div>
+              <div className="min-w-0">
                 <span className="text-[10px] text-zinc-400 uppercase font-bold block">Sales Delivery No</span>
-                <span className="font-mono font-extrabold text-zinc-900 dark:text-zinc-50">{selectedReturnForAction.salesDeliveryNo || '5515964508'}</span>
+                <span className="break-all font-mono font-extrabold text-zinc-900 dark:text-zinc-50">{selectedReturnForAction.salesDeliveryNo || '5515964508'}</span>
               </div>
-              <div>
+              <div className="min-w-0">
                 <span className="text-[10px] text-zinc-400 uppercase font-bold block">Customer Name</span>
-                <span className="font-semibold text-zinc-900 dark:text-zinc-50">{selectedReturnForAction.customerName || 'Reliance Industries Ltd'}</span>
+                <span className="break-words font-semibold text-zinc-900 dark:text-zinc-50">{selectedReturnForAction.customerName || 'Reliance Industries Ltd'}</span>
               </div>
               <div>
                 <span className="text-[10px] text-zinc-400 uppercase font-bold block">Total Dispatched</span>
@@ -718,8 +711,8 @@ export default function ReturnView() {
             {selectedReturnForAction.items && selectedReturnForAction.items.length > 0 && (
               <div className="space-y-2">
                 <label className="text-xs font-bold text-zinc-700 dark:text-zinc-300 block">Delivered Produce Items List:</label>
-                <div className="border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden">
-                  <table className="w-full text-left text-xs">
+                <div className="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
+                  <table className="w-full min-w-[640px] text-left text-xs">
                     <thead className="bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 text-[10px] font-bold">
                       <tr>
                         <th className="p-2.5">Code</th>
@@ -753,7 +746,7 @@ export default function ReturnView() {
                 <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
                   Select Return Disposition Route:
                 </label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div className="grid grid-cols-1 gap-2 min-[380px]:grid-cols-2 sm:grid-cols-4">
                   {[
                     { id: 'Return To Vendor', label: 'Return To Vendor', icon: Truck },
                     { id: 'Sale To Local Market', label: 'Sale To Local Market', icon: Store },
@@ -767,7 +760,7 @@ export default function ReturnView() {
                         type="button"
                         key={option.id}
                         onClick={() => setDispositionType(option.id)}
-                        className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-1.5 text-center transition-all cursor-pointer ${isSel
+                        className={`min-h-20 p-3 rounded-xl border flex flex-col items-center justify-center gap-1.5 text-center transition-all cursor-pointer ${isSel
                             ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 font-bold shadow-xs'
                             : 'border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
                           }`}
@@ -881,17 +874,17 @@ export default function ReturnView() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-200 dark:border-zinc-800">
+              <div className="flex flex-col-reverse items-stretch justify-end gap-2 border-t border-zinc-200 pt-3 sm:flex-row sm:items-center sm:gap-3 dark:border-zinc-800">
                 <button
                   type="button"
                   onClick={() => setSelectedReturnForAction(null)}
-                  className="px-4 py-2 text-xs font-bold text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl"
+                  className="rounded-xl px-4 py-2 text-xs font-bold text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-[#1b7a5a] hover:bg-[#145d44] text-white font-bold px-6 py-2.5 rounded-xl text-xs tracking-wider uppercase transition-all shadow-sm active:scale-95"
+                  className="rounded-xl bg-[#1b7a5a] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all hover:bg-[#145d44] active:scale-95"
                 >
                   Confirm & Save Disposition
                 </button>
@@ -906,8 +899,8 @@ export default function ReturnView() {
       {/* LOG NEW RETURN DRAWER */}
       {showNewReturnForm && (
         <div className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="w-full max-w-md bg-white dark:bg-[#0c0c0f] h-full shadow-2xl p-6 flex flex-col justify-between border-l border-zinc-200 dark:border-zinc-800 animate-in slide-in-from-right duration-300">
-            <div>
+          <div className="flex h-full w-full max-w-md flex-col justify-between border-l border-zinc-200 bg-white p-4 shadow-2xl sm:p-6 animate-in slide-in-from-right duration-300 dark:border-zinc-800 dark:bg-[#0c0c0f]">
+            <div className="min-h-0 flex-1 overflow-y-auto">
               <div className="flex items-center justify-between border-b border-zinc-150 dark:border-zinc-800 pb-4 mb-6">
                 <div>
                   <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-50 uppercase tracking-wider">Log Return Entry</h2>
@@ -935,7 +928,7 @@ export default function ReturnView() {
                   </select>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
                   <div>
                     <label className="block text-xs font-semibold text-zinc-500 mb-1">Delivery Challan No.</label>
                     <input
@@ -989,7 +982,7 @@ export default function ReturnView() {
                   </select>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
                   <div>
                     <label className="block text-xs font-semibold text-zinc-500 mb-1">Quantity (Units / KG)</label>
                     <input
@@ -1058,7 +1051,7 @@ export default function ReturnView() {
               </form>
             </div>
 
-            <div className="border-t border-zinc-150 dark:border-zinc-800 pt-4 flex gap-3">
+            <div className="shrink-0 border-t border-zinc-150 dark:border-zinc-800 pt-4 flex gap-3">
               <button
                 type="button"
                 onClick={() => setShowNewReturnForm(false)}
