@@ -20,6 +20,20 @@ begin
 end;
 $$ language plpgsql;
 
+do $$
+declare
+  trigger_record record;
+begin
+  for trigger_record in
+    select trigger_name, table_name
+    from information_schema.triggers
+    where trigger_schema = 'public'
+      and trigger_name like 'trg_%_updated_at'
+  loop
+    execute format('drop trigger if exists %I on public.%I', trigger_record.trigger_name, trigger_record.table_name);
+  end loop;
+end $$;
+
 -- =============================================================================
 -- 2. SECURITY & USER MANAGEMENT
 -- =============================================================================
@@ -220,6 +234,28 @@ create table if not exists public.customers (
 
 create trigger trg_customers_updated_at
   before update on public.customers
+  for each row execute function public.handle_updated_at();
+
+create table if not exists public.delivery_locations (
+  id text primary key,
+  name text unique not null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create trigger trg_delivery_locations_updated_at
+  before update on public.delivery_locations
+  for each row execute function public.handle_updated_at();
+
+create table if not exists public.kitchen_areas (
+  id text primary key,
+  name text unique not null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create trigger trg_kitchen_areas_updated_at
+  before update on public.kitchen_areas
   for each row execute function public.handle_updated_at();
 
 create table if not exists public.drivers (
@@ -637,6 +673,8 @@ alter table public.products enable row level security;
 alter table public.barcodes enable row level security;
 alter table public.vendors enable row level security;
 alter table public.customers enable row level security;
+alter table public.delivery_locations enable row level security;
+alter table public.kitchen_areas enable row level security;
 alter table public.drivers enable row level security;
 alter table public.employees enable row level security;
 alter table public.taxes enable row level security;
@@ -662,7 +700,7 @@ declare
   tbl text;
   tables text[] := array[
     'users', 'audit_logs', 'system_settings', 'companies', 'warehouses', 'locations',
-    'categories', 'uoms', 'products', 'barcodes', 'vendors', 'customers',
+    'categories', 'uoms', 'products', 'barcodes', 'vendors', 'customers', 'delivery_locations', 'kitchen_areas',
     'drivers', 'employees', 'taxes', 'reasons', 'cold_rooms', 'cold_room_telemetry',
     'vehicles', 'customer_crates', 'purchase_orders', 'purchase_order_items',
     'goods_receipt_notes', 'inventory', 'inventory_movements', 'sales_orders',

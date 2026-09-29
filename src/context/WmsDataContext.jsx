@@ -277,6 +277,7 @@ export const WmsDataProvider = ({ children }) => {
       // Fetch all collections in parallel from Supabase
       const [
         dbUsers, dbWarehouses, dbLocations, dbProducts, dbVendors, dbCustomers,
+        dbDeliveryLocations, dbKitchenAreas,
         dbVehicles, dbInventory, dbColdRooms, dbLogs, dbSettings, dbCompanies,
         dbCategories, dbUoms, dbDrivers, dbEmployees, dbBarcodes, dbTaxes, dbReasons,
         dbReturns, dbPicklists, dbDispatchInvoices, dbPOs, dbSOs
@@ -287,6 +288,8 @@ export const WmsDataProvider = ({ children }) => {
         fetchTableData('products'),
         fetchTableData('vendors'),
         fetchTableData('customers'),
+        fetchTableData('delivery_locations'),
+        fetchTableData('kitchen_areas'),
         fetchTableData('vehicles'),
         fetchTableData('inventory'),
         fetchTableData('cold_rooms'),
@@ -313,6 +316,16 @@ export const WmsDataProvider = ({ children }) => {
       if (dbProducts && dbProducts.length > 0) { setProducts(dbProducts); safeStorage.set('wms_products', dbProducts); }
       if (dbVendors && dbVendors.length > 0) { setVendors(dbVendors); safeStorage.set('wms_vendors', dbVendors); }
       if (dbCustomers && dbCustomers.length > 0) { setCustomers(dbCustomers); safeStorage.set('wms_customers', dbCustomers); }
+      if (dbDeliveryLocations && dbDeliveryLocations.length > 0) {
+        const names = dbDeliveryLocations.map(location => location.name);
+        setDeliveryLocations(names);
+        safeStorage.set('wms_delivery_locations', names);
+      }
+      if (dbKitchenAreas && dbKitchenAreas.length > 0) {
+        const names = dbKitchenAreas.map(area => area.name);
+        setKitchenAreas(names);
+        safeStorage.set('wms_kitchen_areas', names);
+      }
       if (dbVehicles && dbVehicles.length > 0) { setVehicles(dbVehicles); safeStorage.set('wms_vehicles', dbVehicles); }
       if (dbInventory && dbInventory.length > 0) { setInventory(dbInventory); safeStorage.set('wms_inventory', dbInventory); }
       if (dbColdRooms && dbColdRooms.length > 0) {

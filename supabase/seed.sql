@@ -6,29 +6,27 @@
 -- 1. Users
 insert into public.users (id, username, password_hash, name, role, status, email, phone_number, two_factor_enabled, two_factor_method, two_factor_secret, two_factor_backup_codes, permissions)
 values
-  ('USR-01', 'admin', 'Admin@123', 'Govind Kumar', 'Admin', 'Active', 'admin@gnosiswms.com', '+91 98765 43210', true, 'totp', 'JBSWY3DPEHPK3PXP', '["8F2A-9C4B", "3K7M-5P9Q", "4R8V-1W2X", "6Y3T-7Z9A", "9D2F-8H5J", "1M4P-6S8U", "5V7X-2B4C", "7G9J-3L6N"]'::jsonb, '["dashboard", "masters", "inbound", "outbound", "inventory", "coldchain", "reports", "security"]'::jsonb),
+  ('CAT-03', 'Leafy Greens', 'Spinach, coriander, herbs'),
+  ('CAT-04', 'Berries', 'Fresh berries including strawberries')
   ('USR-02', 'manager', 'Manager@123', 'Anjali Sharma', 'Warehouse Manager', 'Active', 'manager@gnosiswms.com', '+91 98250 12345', true, 'sms', 'KRSXG5CTMVRXEZLU', '["2H4K-6M8P", "9Q1S-3U5V", "7W9Y-1A3C", "5E7G-9J2L"]'::jsonb, '["dashboard", "masters", "inbound", "outbound", "inventory", "coldchain", "reports"]'::jsonb),
   ('USR-03', 'supervisor', 'Supervisor@123', 'Rajesh Patel', 'Supervisor', 'Active', 'supervisor@gnosiswms.com', '+91 98980 12345', false, 'totp', 'MZXW6YTBOI2G64TF', '[]'::jsonb, '["dashboard", "inbound", "outbound", "inventory", "coldchain", "reports"]'::jsonb),
-  ('USR-04', 'operator', 'Operator@123', 'Amit Mehta', 'GRN Operator', 'Active', 'operator@gnosiswms.com', '+91 97230 45678', false, 'sms', '', '[]'::jsonb, '["dashboard", "inbound"]'::jsonb),
   ('USR-05', 'qc_inspector', 'Qc@123', 'Dr. Vivek Joshi', 'Quality Control', 'Active', 'qc@gnosiswms.com', '+91 99090 67890', false, 'totp', '', '[]'::jsonb, '["dashboard", "inbound", "coldchain"]'::jsonb),
   ('USR-06', 'picker', 'Picker@123', 'Suresh Kumar', 'Picker/Packer', 'Active', 'picker@gnosiswms.com', '+91 98790 11223', false, 'sms', '', '[]'::jsonb, '["outbound", "inventory"]'::jsonb),
-  ('USR-07', 'dispatch_clerk', 'Dispatch@123', 'Vikram Singh', 'Dispatch', 'Active', 'dispatch@gnosiswms.com', '+91 96870 64462', false, 'sms', '', '[]'::jsonb, '["dashboard", "outbound"]'::jsonb)
-on conflict (username) do update set
+  ('BC-01', '8901234567890', 'QR-APP-0801', 'P-001', 'Cynodon Grass', 'P-001'),
+  ('BC-02', '8901234567891', 'QR-ORG-0802', 'P-008', 'Fresh Strawberries', 'P-008')
   name = excluded.name,
   role = excluded.role,
-  status = excluded.status,
   email = excluded.email,
   phone_number = excluded.phone_number,
   two_factor_enabled = excluded.two_factor_enabled,
   two_factor_method = excluded.two_factor_method,
-  two_factor_secret = excluded.two_factor_secret,
+  ('C-003', 'CUST-HYPER-02', 'Star Hypermarket Ltd', '8877665544', 'procurement@star.com', '24STARK9876L1Z9', 'S.G. Highway, Ahmedabad', 'Star Mall, S.G. Highway, Ahmedabad - 380054', 'Ahmedabad')
   two_factor_backup_codes = excluded.two_factor_backup_codes,
   permissions = excluded.permissions;
-
 -- 2. Companies
 insert into public.companies (id, code, name, gst_no, address, contact)
-values
-  ('COMP-01', 'GN-01', 'GNOSIS VENTURES LLP', '24AANFG0052H1ZP', 'C/O SHIV COLD STORAGE, SURVEY NO. 105/5 KHIJADIYA BY PASS, CHOWKDI, KHIJADIYA DISTRICT JAMNAGAR-361120', '+91 96870 64462')
+  ('CRT-001', 'Radhe Enterprise Retail', 'C-002', 45, '2026-08-16', 'Cleaned & Restocked'),
+  ('CRT-002', 'Star Hypermarket Ltd', 'C-003', 120, '2026-08-17', 'Pending Sanitization')
 on conflict (code) do nothing;
 
 -- 3. Warehouses
@@ -116,6 +114,42 @@ values
 on conflict (id) do nothing;
 
 -- 11. Drivers & Employees
+insert into public.delivery_locations (id, name)
+values
+  ('DLOC-001', '20 Acre Direct Delivery'),
+  ('DLOC-002', '22 ACRE'),
+  ('DLOC-003', '28 Acer Direct Delivery'),
+  ('DLOC-004', '33 ACRE'),
+  ('DLOC-005', '35 ACRE'),
+  ('DLOC-006', '50 Acre Direct Delivery (GC)'),
+  ('DLOC-007', '50 Acre Direct Delivery (RD)'),
+  ('DLOC-008', '50 Acre Direct Delivery(BHS)'),
+  ('DLOC-009', '54 ACRE'),
+  ('DLOC-010', '54 Acre Direct Delivery'),
+  ('DLOC-011', '73 ACRE'),
+  ('DLOC-012', 'EC'),
+  ('DLOC-013', 'EC Green Belt'),
+  ('DLOC-014', 'Gajwan'),
+  ('DLOC-015', 'LC 10 QN-1'),
+  ('DLOC-016', 'LC-1 (Central Animal Kitchen)'),
+  ('DLOC-017', 'LC-10 QN-2'),
+  ('DLOC-018', 'LC-6'),
+  ('DLOC-019', 'MOU'),
+  ('DLOC-020', 'MOU(Food Zone)'),
+  ('DLOC-021', 'R and R Direct Delivery'),
+  ('DLOC-022', 'RandR'),
+  ('DLOC-023', 'Rheino Safari'),
+  ('DLOC-024', 'Rhino Safari Direct Delivery'),
+  ('DLOC-025', 'VACC Animal Kitchen'),
+  ('DLOC-026', 'Vantara Niwas')
+on conflict (name) do nothing;
+
+insert into public.kitchen_areas (id, name)
+values
+  ('KAREA-001', 'ANIMAL KITCHEN'),
+  ('KAREA-002', 'HOTEL SITE')
+on conflict (name) do nothing;
+
 insert into public.drivers (id, name, mobile, license_no)
 values
   ('DRV-01', 'Ramesh Kumar', '+91 99887 76655', 'DL-GJ10-202100456'),
@@ -155,6 +189,20 @@ on conflict (id) do update set
   current_humidity = excluded.current_humidity,
   status = excluded.status;
 
+insert into public.cold_room_telemetry (cold_room_id, temperature, humidity, status, recorded_at)
+select seed.cold_room_id, seed.temperature, seed.humidity, seed.status, seed.recorded_at
+from (values
+  ('CR-1', 1.80::numeric, 90.00::numeric, 'Normal', '2026-08-05 08:00:00+05:30'::timestamptz),
+  ('CR-2', 5.20::numeric, 85.00::numeric, 'Normal', '2026-08-05 08:00:00+05:30'::timestamptz),
+  ('CR-3', 2.50::numeric, 92.00::numeric, 'Alert', '2026-08-05 08:00:00+05:30'::timestamptz)
+) as seed(cold_room_id, temperature, humidity, status, recorded_at)
+where not exists (
+  select 1
+  from public.cold_room_telemetry existing
+  where existing.cold_room_id = seed.cold_room_id
+    and existing.recorded_at = seed.recorded_at
+);
+
 -- 14. Vehicles & Gatepasses
 insert into public.vehicles (id, vehicle_no, driver_name, driver_mobile, transporter, gatepass_no, process_type, booking_type, booking_ref_doc_no, in_date_time, out_date_time, in_km_reading, out_km_reading, status, remark, temp_log)
 values
@@ -183,6 +231,11 @@ values
   ('PO-2026-004', 'PO-2026-004', 'V-003', '2026-08-06', 'Draft')
 on conflict (po_no) do nothing;
 
+insert into public.goods_receipt_notes (id, grn_no, purchase_order_id, po_no, gatepass_no, vehicle_no, vendor_id, received_date, received_by, status)
+values
+  ('GRN-001', 'GRN-2026-001', 'PO-2026-001', 'PO-2026-001', 'GP-2026-000101', 'GJ01MT9901', 'V-001', '2026-08-05 10:00:00+05:30', 'operator', 'Completed')
+on conflict (grn_no) do nothing;
+
 insert into public.purchase_order_items (id, purchase_order_id, product_id, expected_qty, received_qty, rate)
 values
   ('POI-01', 'PO-2026-001', 'P-001', 100, 100, 450),
@@ -204,6 +257,11 @@ values
 on conflict (id) do nothing;
 
 -- 17. Sales Orders & Sales Order Items
+insert into public.inventory_movements (id, inventory_id, product_id, batch_no, source_location, target_location, qty, movement_type, executed_by, executed_at)
+values
+  ('MOV-001', 'INV-1001', 'P-001', 'B-APP-0801A', 'Receiving Dock', 'A-01-01', 100, 'Putaway', 'operator', '2026-08-05 10:15:00+05:30')
+on conflict (id) do nothing;
+
 insert into public.sales_orders (id, order_no, customer_id, date, status, priority, dispatch_details)
 values
   ('SO-2026-001', 'SO-2026-001', 'C-001', '2026-08-04', 'Delivered', 'Normal', '{

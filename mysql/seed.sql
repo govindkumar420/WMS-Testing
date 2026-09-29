@@ -7,7 +7,11 @@ INSERT INTO users
 VALUES
 ('USR-01', 'admin', 'Admin@123', 'Govind Kumar', 'Admin', 'Active', 'admin@gnosiswms.com', '+91 98765 43210', TRUE, 'totp', 'JBSWY3DPEHPK3PXP', JSON_ARRAY('8F2A-9C4B','3K7M-5P9Q','4R8V-1W2X'), JSON_ARRAY('dashboard','masters','inbound','outbound','inventory','coldchain','reports','security')),
 ('USR-02', 'manager', 'Manager@123', 'Anjali Sharma', 'Warehouse Manager', 'Active', 'manager@gnosiswms.com', '+91 98250 12345', TRUE, 'sms', 'KRSXG5CTMVRXEZLU', JSON_ARRAY('2H4K-6M8P','9Q1S-3U5V'), JSON_ARRAY('dashboard','masters','inbound','outbound','inventory','coldchain','reports')),
-('USR-03', 'supervisor', 'Supervisor@123', 'Rajesh Patel', 'Supervisor', 'Active', 'supervisor@gnosiswms.com', '+91 98980 12345', FALSE, 'totp', '', JSON_ARRAY(), JSON_ARRAY('dashboard','inbound','outbound','inventory','coldchain','reports'))
+('USR-03', 'supervisor', 'Supervisor@123', 'Rajesh Patel', 'Supervisor', 'Active', 'supervisor@gnosiswms.com', '+91 98980 12345', FALSE, 'totp', 'MZXW6YTBOI2G64TF', JSON_ARRAY(), JSON_ARRAY('dashboard','inbound','outbound','inventory','coldchain','reports')),
+('USR-04', 'operator', 'Operator@123', 'Amit Mehta', 'GRN Operator', 'Active', 'operator@gnosiswms.com', '+91 97230 45678', FALSE, 'sms', '', JSON_ARRAY(), JSON_ARRAY('dashboard','inbound')),
+('USR-05', 'qc_inspector', 'Qc@123', 'Dr. Vivek Joshi', 'Quality Control', 'Active', 'qc@gnosiswms.com', '+91 99090 67890', FALSE, 'totp', '', JSON_ARRAY(), JSON_ARRAY('dashboard','inbound','coldchain')),
+('USR-06', 'picker', 'Picker@123', 'Suresh Kumar', 'Picker/Packer', 'Active', 'picker@gnosiswms.com', '+91 98790 11223', FALSE, 'sms', '', JSON_ARRAY(), JSON_ARRAY('outbound','inventory')),
+('USR-07', 'dispatch_clerk', 'Dispatch@123', 'Vikram Singh', 'Dispatch', 'Active', 'dispatch@gnosiswms.com', '+91 96870 64462', FALSE, 'sms', '', JSON_ARRAY(), JSON_ARRAY('dashboard','outbound'))
 ON DUPLICATE KEY UPDATE name = VALUES(name), role = VALUES(role), permissions = VALUES(permissions);
 
 INSERT INTO system_settings (`key`, barcode_type, otp_verify, two_factor_enforcement, default_two_factor_method, fifo_method, extra_config)
@@ -37,7 +41,8 @@ INSERT INTO categories (id, name, description)
 VALUES
 ('CAT-01', 'Fruits', 'Fresh orchard fruits, citrus and berries'),
 ('CAT-02', 'Vegetables', 'Root crops and vegetables'),
-('CAT-03', 'Leafy Greens', 'Spinach, coriander and herbs')
+('CAT-03', 'Leafy Greens', 'Spinach, coriander and herbs'),
+('CAT-04', 'Berries', 'Fresh berries including strawberries')
 ON DUPLICATE KEY UPDATE description = VALUES(description);
 
 INSERT INTO uoms (id, code, description)
@@ -57,7 +62,7 @@ VALUES
 ('P-005', 'PROD-ORG-02', 'Nagpur Oranges', 'Fruits', 'KG', '4-8C', 30, 40),
 ('P-006', 'PROD-BAN-03', 'Cavendish Bananas', 'Fruits', 'KG', '13-15C', 10, 60),
 ('P-007', 'PROD-POT-04', 'Organic Potatoes', 'Vegetables', 'KG', '12-15C', 90, 100),
-('P-008', 'PROD-STR-08', 'Fresh Strawberries', 'Fruits', 'KG', '0-2C', 5, 15)
+('P-008', 'PROD-STR-08', 'Fresh Strawberries', 'Berries', 'KG', '0-2C', 5, 15)
 ON DUPLICATE KEY UPDATE description = VALUES(description), min_qty = VALUES(min_qty);
 
 INSERT INTO barcodes (id, barcode, qr_code, sku, product, product_id)
@@ -72,6 +77,27 @@ VALUES
 ('V-002', 'VND-OMSAI', 'Om Sai Ram Fruit Centre', '8765432109', 'omsai@fruits.com', 'Nagpur'),
 ('V-003', 'VND-VEGOTIC', 'Vegotic Agro Farms', '7654321098', 'vegotic@agro.com', 'Pune')
 ON DUPLICATE KEY UPDATE name = VALUES(name), city = VALUES(city);
+
+INSERT INTO delivery_locations (id, name)
+VALUES
+('DLOC-001', '20 Acre Direct Delivery'), ('DLOC-002', '22 ACRE'),
+('DLOC-003', '28 Acer Direct Delivery'), ('DLOC-004', '33 ACRE'),
+('DLOC-005', '35 ACRE'), ('DLOC-006', '50 Acre Direct Delivery (GC)'),
+('DLOC-007', '50 Acre Direct Delivery (RD)'), ('DLOC-008', '50 Acre Direct Delivery(BHS)'),
+('DLOC-009', '54 ACRE'), ('DLOC-010', '54 Acre Direct Delivery'),
+('DLOC-011', '73 ACRE'), ('DLOC-012', 'EC'),
+('DLOC-013', 'EC Green Belt'), ('DLOC-014', 'Gajwan'),
+('DLOC-015', 'LC 10 QN-1'), ('DLOC-016', 'LC-1 (Central Animal Kitchen)'),
+('DLOC-017', 'LC-10 QN-2'), ('DLOC-018', 'LC-6'),
+('DLOC-019', 'MOU'), ('DLOC-020', 'MOU(Food Zone)'),
+('DLOC-021', 'R and R Direct Delivery'), ('DLOC-022', 'RandR'),
+('DLOC-023', 'Rheino Safari'), ('DLOC-024', 'Rhino Safari Direct Delivery'),
+('DLOC-025', 'VACC Animal Kitchen'), ('DLOC-026', 'Vantara Niwas')
+ON DUPLICATE KEY UPDATE name = VALUES(name);
+
+INSERT INTO kitchen_areas (id, name)
+VALUES ('KAREA-001', 'ANIMAL KITCHEN'), ('KAREA-002', 'HOTEL SITE')
+ON DUPLICATE KEY UPDATE name = VALUES(name);
 
 INSERT INTO customers (id, code, name, contact, email, city)
 VALUES

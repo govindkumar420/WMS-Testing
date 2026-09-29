@@ -61,6 +61,8 @@ erDiagram
 | | `barcodes` | Barcode & QR code SKU mappings | `id` | `product_id` |
 | | `vendors` | Supplier master with GST & contact details | `id` | - |
 | | `customers` | Client master with billing & shipping addresses | `id` | - |
+| | `delivery_locations` | Outbound delivery destination options | `id` | - |
+| | `kitchen_areas` | Customer kitchen / delivery area options | `id` | - |
 | | `drivers` | Logistics drivers & driving license records | `id` | - |
 | | `employees` | Warehouse workforce & departments | `id` | - |
 | | `taxes` | GST slab configurations (5%, 12%, 18%) | `id` | - |
